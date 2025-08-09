@@ -16,7 +16,7 @@ export const fetch_patient_all = async (): Promise<PatientDetails[]> => {
   }
 };
 
-export const fetch_patient_by_id = async (uid: string) => {
+export const fetch_patient_by_id = async (uid: number) => {
   return await PatientClass.getPatientByUid(uid);
 };
 

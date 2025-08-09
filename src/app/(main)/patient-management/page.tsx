@@ -1,6 +1,6 @@
 import React from "react";
-import DynamicTable from "./components/table";
 import { fetch_patient_all } from "@/action/patient.action";
+import Wrapper from "./components/wrapper";
 
 const PatientManagement = async () => {
   const patientData = await fetch_patient_all();
@@ -8,10 +8,9 @@ const PatientManagement = async () => {
   return (
     <div>
     <div className="bg-white px-6 md:px-16">
-    <DynamicTable
-      data={patientData}
-      caption="List of Patients"
-    />
+      <Wrapper
+        data={patientData}
+      />
     </div>
   </div>
   );

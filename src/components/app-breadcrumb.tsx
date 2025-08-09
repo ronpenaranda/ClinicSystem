@@ -18,7 +18,7 @@ import {
 
     const breadcrumbMap: Record<string, string> = {
       projects: 'Projects',
-      'weather-app': 'Weatherly',
+      'patient-management': 'Patient Management',
       'inventory-management': 'InventoryFi',
       'settings': 'Settings',
       'inventory': 'Inventory',

@@ -1,15 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import {
-  Calendar,
   Home,
-  Inbox,
-  Search,
-  Settings,
+  Package,
+  ShoppingCart,
+  FileText,
   User2,
   ChevronUp,
-  ChevronDown,
 } from "lucide-react";
 
 import {
@@ -31,6 +29,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const menuItems = [
+  { label: "Dashboard", icon: Home, path: "/dashboard" },
+  { label: "Patient Management", icon: Package, path: "/patient-management" },
+  { label: "Reports", icon: FileText, path: "/reports" },
+];
+
 export function AppSidebar() {
   const router = useRouter();
 
@@ -42,57 +46,30 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <div className="flex justify-center p-4 mb-5">Great Smiles</div>
+          <div className="flex justify-center p-4 mb-5 text-lg font-semibold">
+            Great Smiles
+          </div>
+
           <SidebarGroupContent>
             <SidebarMenu>
-                <SidebarMenuItem>
+              {menuItems.map(({ label, icon: Icon, path }) => (
+                <SidebarMenuItem key={path}>
                   <SidebarMenuButton asChild>
                     <button
-                      className="flex gap-4"
-                      onClick={() => handleNavigation('/dashboard')}
+                      className="flex gap-4 items-center"
+                      onClick={() => handleNavigation(path)}
                     >
-                      <span className={`${Home}`}></span>
-                      <span>Dashboard</span>
+                      <Icon className="w-5 h-5" />
+                      <span>{label}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <button
-                      className="flex gap-4"
-                      onClick={() => handleNavigation('/inventory')}
-                    >
-                      <span className={`${Home}`}></span>
-                      <span>Inventory</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <button
-                      className="flex gap-4"
-                      onClick={() => handleNavigation('/pos')}
-                    >
-                      <span className={`${Home}`}></span>
-                      <span>Point of Sale</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <button
-                      className="flex gap-4"
-                      onClick={() => handleNavigation('/reports')}
-                    >
-                      <span className={`${Home}`}></span>
-                      <span>Reports</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
