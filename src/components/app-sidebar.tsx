@@ -32,6 +32,7 @@ import {
 const menuItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
   { label: "Patient Management", icon: Package, path: "/patient-management" },
+  { label: "Doctors Management", icon: Package, path: "/doctor-management" },
   { label: "Reports", icon: FileText, path: "/reports" },
 ];
 

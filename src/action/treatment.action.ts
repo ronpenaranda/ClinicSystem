@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import TreatmentClass, { TreatmentDetails } from "@/model/treatment.model";
 
@@ -7,7 +7,33 @@ export const fetch_all_treatments = async () => {
 };
 
 export const fetch_treatment_by_uid = async (uid: number) => {
-  return await TreatmentClass.getTreatmentByUid(uid);
+  try {
+    const res = await TreatmentClass.getTreatmentByUid(uid);
+    if ("error" in res) {
+      console.error(res.error);
+      return [];
+    }
+    return res;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+export const fetch_treatment_by_doctor_id = async (
+  doctorId: number
+): Promise<TreatmentDetails[]> => {
+  try {
+    const res = await TreatmentClass.getTreatmentsByDoctorId(doctorId);
+    if ("error" in res) {
+      console.error(res.error);
+      return [];
+    }
+    return res;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };
 
 export const insert_treatment = async (

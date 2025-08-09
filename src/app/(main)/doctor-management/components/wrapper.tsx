@@ -3,32 +3,31 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import DynamicTable from "@/components/table/table";
-import { PatientDetails } from "@/model/patient.model";
+import type { Doctor } from "@/model/doctor.model";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
 interface WrapperProps {
-  data: PatientDetails[];
+  data: Doctor[];
 }
 
 const Wrapper = ({ data }: WrapperProps) => {
   const router = useRouter();
 
   const columns = [
-    { header: "uid", keys: "uid" },
-    { header: "First Name", keys: "first_name" },
-    { header: "Middle Name", keys: "middle_name" },
-    { header: "Last Name", keys: "last_name" },
-    { header: "Address", keys: "address" },
-    { header: "Phone Number", keys: "phone_number" },
-    { header: "Email Address", keys: "email_address" },
-    { header: "Remarks", keys: "remarks" },
+    { header: "uid", keys: "id" },
+    { header: "Name", keys: "name" },
+    { header: "Specialization", keys: "specialization" },
+    { header: "Contact Number", keys: "contact_number" },
+    { header: "Email Address", keys: "email" },
+    { header: "License Number", keys: "license_number" },
+    { header: "Date Hired", keys: "hire_date" },
   ];
 
-  const handleEdit = (url: PatientDetails) => {
-    router.push(`/patient-management/${url.uid}`);
+  const handleEdit = (url: Doctor) => {
+    router.push(`/doctor-management/${url.id}`);
   };
 
   return (

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import {
@@ -11,7 +11,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Trash, EyeIcon } from "lucide-react";
+import { Trash, Pen } from "lucide-react";
 
 interface TableProps<T> {
   data: T[];
@@ -41,7 +41,7 @@ const DynamicTable = <T extends Record<string, any>>({
             {columns.map((col) => (
               <TableHead key={col.keys}>{col.header}</TableHead>
             ))}
-            <TableHead>Actions</TableHead>
+            {onEdit && <TableHead>Actions</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,22 +50,24 @@ const DynamicTable = <T extends Record<string, any>>({
               {columns.map((col) => (
                 <TableCell key={col.keys}>{row[col.keys]}</TableCell>
               ))}
-              <TableCell className="flex gap-2">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() => onEdit && onEdit(row)}
-                >
-                <EyeIcon className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  onClick={() => onDelete && onDelete(row)}
-                >
-                <Trash className="w-4 h-4" />
-                </Button>
-              </TableCell>
+              {onEdit && (
+                <TableCell className="flex gap-2">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => onEdit && onEdit(row)}
+                  >
+                    <Pen className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    onClick={() => onDelete && onDelete(row)}
+                  >
+                    <Trash className="w-4 h-4" />
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
