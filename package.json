@@ -23,6 +23,8 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "lucide-react": "^0.456.0",
+    "msnodesqlv8": "^5.1.1",
+    "mssql": "^11.0.1",
     "next": "^15.0.3",
     "next-images": "^1.8.5",
     "primeicons": "^7.0.0",
@@ -33,6 +35,7 @@
     "zustand": "^4.0.0"
   },
   "devDependencies": {
+    "@types/mssql": "^9.1.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
