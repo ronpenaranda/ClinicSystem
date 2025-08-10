@@ -11,7 +11,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Trash, Pen } from "lucide-react";
+import { Trash, Pen, Loader2 } from "lucide-react";
+
+import { useActionHandler } from "@/hooks/useActionHandler";
 
 interface TableProps<T> {
   data: T[];
@@ -19,6 +21,7 @@ interface TableProps<T> {
   caption?: string;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  isLoading?: boolean;
 }
 
 const DynamicTable = <T extends Record<string, any>>({
@@ -27,6 +30,7 @@ const DynamicTable = <T extends Record<string, any>>({
   caption,
   onEdit,
   onDelete,
+  isLoading,
 }: TableProps<T>) => {
   if (!data || data.length === 0) {
     return <p className="text-center text-gray-500">No data available</p>;
@@ -64,7 +68,11 @@ const DynamicTable = <T extends Record<string, any>>({
                     variant="destructive"
                     onClick={() => onDelete && onDelete(row)}
                   >
-                    <Trash className="w-4 h-4" />
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash className="w-4 h-4" />
+                    )}
                   </Button>
                 </TableCell>
               )}

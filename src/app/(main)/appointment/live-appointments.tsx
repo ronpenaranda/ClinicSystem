@@ -7,6 +7,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
+import { useActionHandler } from "@/hooks/useActionHandler";
+import { delete_appointment } from "@/action/appointment.action";
+import type { Appointment } from "@/model/appointment.model";
+
 const columns = [
   { header: "Patient Name", keys: "patient_uid" },
   { header: "Doctor's Name", keys: "doctor_id" },
@@ -16,7 +20,12 @@ const columns = [
 ];
 
 const LiveAppointment = () => {
+  const { execute, isPending } = useActionHandler(delete_appointment);
   const { appointments, loading, error } = useLiveAppointments();
+
+  const handleDelete = async (row: Appointment) => {
+    await execute(row.id);
+  };
 
   if (loading) return <p>Loading appointments...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -39,7 +48,8 @@ const LiveAppointment = () => {
           columns={columns}
           caption="List of Appointments"
           onEdit={(row) => console.log("Delete:", row)}
-          onDelete={(row) => console.log("Delete:", row)}
+          onDelete={(row) => handleDelete(row)}
+          isLoading={isPending}
         />
       </Card>
     </div>
