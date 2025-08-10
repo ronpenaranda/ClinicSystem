@@ -33,6 +33,7 @@ const menuItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
   { label: "Patient Management", icon: Package, path: "/patient-management" },
   { label: "Doctors Management", icon: Package, path: "/doctor-management" },
+  { label: "Appointment", icon: Package, path: "/appointment" },
   { label: "Reports", icon: FileText, path: "/reports" },
 ];
 
