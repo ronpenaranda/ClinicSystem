@@ -9,8 +9,7 @@ const inter = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Lucky P & A Hardware",
-  description: "This is a web portfolio made using next js",
+  title: "Great Smiles Dental Clinic",
 };
 
 export default function RootLayout({

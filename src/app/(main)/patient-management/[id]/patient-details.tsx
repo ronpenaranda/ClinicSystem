@@ -42,6 +42,8 @@ const columns_payment = [
 
 const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
   const [form, setForm] = useState<PatientDetails>(data[0]);
+  const [treatments, seTtreatment] = useState<TreatmentDetails[]>(treatment);
+  const [payments, setPayments] = useState<Payment[]>(payment);
 
   return (
     <Card>
@@ -90,7 +92,7 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           <TabsContent value="treatment">
             <Card className="p-4">
               <DynamicTable
-                data={treatment}
+                data={treatments}
                 columns={columns}
                 caption="List of Treatments"
                 onEdit={(row) => console.log("Delete:", row)}
@@ -101,7 +103,7 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           <TabsContent value="payment">
             <Card className="p-4">
               <DynamicTable
-                data={payment}
+                data={payments}
                 columns={columns_payment}
                 caption="List of Payments"
               />

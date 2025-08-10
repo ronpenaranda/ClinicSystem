@@ -42,6 +42,8 @@ const columns_schedule = [
 
 const PatientDetails = ({ data, treatment, schedule }: PatientProps) => {
   const [form, setForm] = useState<Doctor>(data[0]);
+  const [treatments, seTtreatment] = useState<TreatmentDetails[]>(treatment);
+  const [schedules, setSchedules] = useState<DoctorSchedule[]>(schedule);
 
   return (
     <Card>
@@ -82,7 +84,7 @@ const PatientDetails = ({ data, treatment, schedule }: PatientProps) => {
           <TabsContent value="treatment">
             <Card className="p-4">
               <DynamicTable
-                data={treatment}
+                data={treatments}
                 columns={columns}
                 caption="List of Treatments"
                 onEdit={(row) => console.log("Delete:", row)}
@@ -93,7 +95,7 @@ const PatientDetails = ({ data, treatment, schedule }: PatientProps) => {
           <TabsContent value="schedule">
             <Card className="p-4">
               <DynamicTable
-                data={schedule}
+                data={schedules}
                 columns={columns_schedule}
                 caption="List of Schedule"
                 onEdit={(row) => console.log("Delete:", row)}
