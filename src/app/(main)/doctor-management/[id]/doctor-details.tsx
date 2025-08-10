@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import type { Doctor } from "@/model/doctor.model";
 import type { TreatmentDetails } from "@/model/treatment.model";
+import type { DoctorSchedule } from "@/model/doctor-schedule.model";
 import {
   Card,
   CardHeader,
@@ -20,6 +21,7 @@ import DynamicTable from "@/components/table/table";
 interface PatientProps {
   data: Doctor[];
   treatment: TreatmentDetails[];
+  schedule: DoctorSchedule[];
 }
 
 const columns = [
@@ -29,7 +31,16 @@ const columns = [
   { header: "Amount", keys: "amount" },
 ];
 
-const PatientDetails = ({ data, treatment }: PatientProps) => {
+const columns_schedule = [
+  { header: "Doctor", keys: "doctor_id" },
+  { header: "Day", keys: "day_of_week" },
+  { header: "Start Time", keys: "start_time" },
+  { header: "End Time", keys: "end_time" },
+  { header: "Available", keys: "is_available" },
+  { header: "Notes", keys: "notes" },
+];
+
+const PatientDetails = ({ data, treatment, schedule }: PatientProps) => {
   const [form, setForm] = useState<Doctor>(data[0]);
 
   return (
@@ -80,7 +91,15 @@ const PatientDetails = ({ data, treatment }: PatientProps) => {
             </Card>
           </TabsContent>
           <TabsContent value="schedule">
-            <Card className="p-4"></Card>
+            <Card className="p-4">
+              <DynamicTable
+                data={schedule}
+                columns={columns_schedule}
+                caption="List of Schedule"
+                onEdit={(row) => console.log("Delete:", row)}
+                onDelete={(row) => console.log("Delete:", row)}
+              />
+            </Card>
           </TabsContent>
         </Tabs>
       </CardContent>

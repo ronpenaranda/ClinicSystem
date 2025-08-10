@@ -39,10 +39,9 @@ const Wrapper = ({ data }: WrapperProps) => {
           className="flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Add Patient
+          Add Doctors
         </Button>
       </div>
-
       <Card className="p-4">
         <DynamicTable
           data={data}
