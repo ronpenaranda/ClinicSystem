@@ -1,4 +1,3 @@
-// appointment.model.ts
 import supabase from "@/db/supabase";
 
 export interface Appointment {
