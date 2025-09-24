@@ -88,6 +88,7 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           <TabsList>
             <TabsTrigger value="treatment">Treatments</TabsTrigger>
             <TabsTrigger value="payment">Payments</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
           <TabsContent value="treatment">
             <Card className="p-4">
@@ -109,8 +110,10 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
               />
             </Card>
           </TabsContent>
-          <TabsContent value="Documents">
-            <Card className="p-4"></Card>
+          <TabsContent value="documents">
+            <Card className="p-4">
+              <p>patient_xray.jpg</p>
+            </Card>
           </TabsContent>
         </Tabs>
       </CardContent>
