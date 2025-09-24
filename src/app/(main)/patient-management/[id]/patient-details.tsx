@@ -109,6 +109,9 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
               />
             </Card>
           </TabsContent>
+          <TabsContent value="Documents">
+            <Card className="p-4"></Card>
+          </TabsContent>
         </Tabs>
       </CardContent>
       <CardFooter>

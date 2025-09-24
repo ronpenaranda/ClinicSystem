@@ -1,5 +1,5 @@
 import React from "react";
-import LiveAppointment from "./live-appointments";
+import LiveAppointment from "./components/live-appointments";
 
 const Page = async () => {
   return (

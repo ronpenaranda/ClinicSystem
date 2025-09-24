@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLiveAppointments } from "@/hooks/useLiveAppointments";
 import DynamicTable from "@/components/table/table";
 import { Card } from "@/components/ui/card";
+import Loading from "../loading";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -20,22 +23,29 @@ const columns = [
 ];
 
 const LiveAppointment = () => {
+  const router = useRouter();
+  const [id, setId] = useState<number | undefined>(undefined);
   const { execute, isPending } = useActionHandler(delete_appointment);
   const { appointments, loading, error } = useLiveAppointments();
 
   const handleDelete = async (row: Appointment) => {
-    await execute(row.id);
+    setId(row.id);
+    const res = await execute(row.id);
+    res && setId(undefined);
   };
 
-  if (loading) return <p>Loading appointments...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const addAppointment = () => {
+    router.push(`/appointment/add-appointment`);
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <div>
       <div className="flex justify-end mb-4">
         <Button
           size="sm"
-          onClick={() => console.log("Add Button")}
+          onClick={() => addAppointment()}
           className="flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
@@ -47,9 +57,10 @@ const LiveAppointment = () => {
           data={appointments}
           columns={columns}
           caption="List of Appointments"
-          onEdit={(row) => console.log("Delete:", row)}
+          onEdit={(row) => console.log("edit:", row)}
           onDelete={(row) => handleDelete(row)}
           isLoading={isPending}
+          id={id}
         />
       </Card>
     </div>

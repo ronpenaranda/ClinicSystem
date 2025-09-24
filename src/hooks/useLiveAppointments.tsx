@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import supabase from "@/db/supabase";
 import type { Appointment } from "@/model/appointment.model";
@@ -18,6 +17,7 @@ export function useLiveAppointments() {
         .from("appointments")
         .select("*")
         .order("appointment_date", { ascending: true });
+
       if (isMounted) {
         if (error) {
           setError(error.message);
@@ -28,6 +28,7 @@ export function useLiveAppointments() {
         setLoading(false);
       }
     }
+
     fetchAppointments();
 
     const channel = supabase
@@ -48,14 +49,23 @@ export function useLiveAppointments() {
                     new Date(a.appointment_date).getTime() -
                     new Date(b.appointment_date).getTime()
                 );
+
               case "UPDATE":
                 if (!newAppointment) return current;
-                return current.map((appt) =>
-                  appt.id === newAppointment.id ? newAppointment : appt
-                );
+                return current
+                  .map((appt) =>
+                    appt.id === newAppointment.id ? newAppointment : appt
+                  )
+                  .sort(
+                    (a, b) =>
+                      new Date(a.appointment_date).getTime() -
+                      new Date(b.appointment_date).getTime()
+                  );
+
               case "DELETE":
                 if (!oldAppointment) return current;
                 return current.filter((appt) => appt.id !== oldAppointment.id);
+
               default:
                 return current;
             }

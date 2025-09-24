@@ -4,6 +4,8 @@ export interface Appointment {
   id?: number;
   patient_uid: number;
   doctor_id: number;
+  patient?: string;
+  doctor?: string;
   appointment_date: string;
   start_time: string;
   end_time: string;
