@@ -8,7 +8,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
@@ -21,8 +20,8 @@ import DynamicTable from "@/components/table/table";
 
 interface PatientProps {
   data: PatientDetails[];
-  treatment: TreatmentDetails[];
-  payment: Payment[];
+  treatment?: TreatmentDetails[] | undefined;
+  payment?: Payment[] | undefined;
 }
 
 const columns = [
@@ -40,10 +39,12 @@ const columns_payment = [
   { header: "Notes", keys: "note" },
 ];
 
-const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
+const PatientForm = ({ data, treatment, payment }: PatientProps) => {
   const [form, setForm] = useState<PatientDetails>(data[0]);
-  const [treatments, seTtreatment] = useState<TreatmentDetails[]>(treatment);
-  const [payments, setPayments] = useState<Payment[]>(payment);
+  const [treatments, seTtreatment] = useState<TreatmentDetails[] | undefined>(
+    treatment
+  );
+  const [payments, setPayments] = useState<Payment[] | undefined>(payment);
 
   return (
     <Card>
@@ -66,7 +67,7 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           </div>
           <div className="grid col-span-4 gap-2">
             <Label htmlFor="tabs-demo-username">Gender</Label>
-            <Input id="tabs-demo-username" defaultValue={form.last_name} />
+            <Input id="tabs-demo-username" defaultValue={form.gender} />
           </div>
           <div className="grid col-span-8 gap-2">
             <Label htmlFor="tabs-demo-name">Address</Label>
@@ -88,12 +89,12 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           <TabsList>
             <TabsTrigger value="treatment">Treatments</TabsTrigger>
             <TabsTrigger value="payment">Payments</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="documents">Medical Records</TabsTrigger>
           </TabsList>
           <TabsContent value="treatment">
             <Card className="p-4">
               <DynamicTable
-                data={treatments}
+                data={treatments ?? []}
                 columns={columns}
                 caption="List of Treatments"
                 onEdit={(row) => console.log("Delete:", row)}
@@ -104,7 +105,7 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
           <TabsContent value="payment">
             <Card className="p-4">
               <DynamicTable
-                data={payments}
+                data={payments ?? []}
                 columns={columns_payment}
                 caption="List of Payments"
               />
@@ -126,4 +127,4 @@ const PatientDetails = ({ data, treatment, payment }: PatientProps) => {
   );
 };
 
-export default PatientDetails;
+export default PatientForm;

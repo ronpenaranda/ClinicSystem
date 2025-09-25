@@ -70,7 +70,6 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map(({ label, icon: Icon, path }) => {
                 const split_path = pathname.split("/");
-                console.log(split_path);
                 const isActive = `/${split_path[1]}` === path;
                 return (
                   <SidebarMenuItem key={path}>

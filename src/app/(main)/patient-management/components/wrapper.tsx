@@ -31,12 +31,16 @@ const Wrapper = ({ data }: WrapperProps) => {
     router.push(`/patient-management/${url.uid}`);
   };
 
+  const handleAdd = () => {
+    router.push(`/patient-management/add-patient`);
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-4">
         <Button
           size="sm"
-          onClick={() => console.log("Add Button")}
+          onClick={() => handleAdd()}
           className="flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />

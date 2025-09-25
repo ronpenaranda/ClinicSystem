@@ -28,6 +28,7 @@ export function BreadcrumbDemo() {
     dashboard: "Dashboard",
     reports: "Reports",
     "add-appointment": "Add Appointment",
+    "add-patient": "Add Patient",
   };
 
   return (
@@ -36,9 +37,6 @@ export function BreadcrumbDemo() {
         <BreadcrumbPage>
           <SidebarTrigger />
         </BreadcrumbPage>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/">Home</BreadcrumbLink>
-        </BreadcrumbItem>
         <BreadcrumbSeparator />
         {pathSegments.map((segment, index) => {
           const href = "/" + pathSegments.slice(0, index + 1).join("/");

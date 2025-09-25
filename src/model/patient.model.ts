@@ -3,7 +3,7 @@
 import supabase from "@/db/supabase";
 
 export interface PatientDetails {
-  uid: number;
+  uid?: number;
   first_name: string;
   middle_name?: string;
   last_name: string;
