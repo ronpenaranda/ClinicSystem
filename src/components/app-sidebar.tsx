@@ -33,6 +33,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import useAuth from "@/hooks/useAuth";
+
 const menuItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
   { label: "Patient Management", icon: Users, path: "/patient-management" },
@@ -48,6 +50,8 @@ const menuItems = [
 export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { user, logout } = useAuth();
 
   const handleNavigation = (url: string) => {
     router.push(url);
@@ -99,7 +103,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="flex items-center gap-2">
-                  <User2 className="w-5 h-5" /> Guest
+                  <User2 className="w-5 h-5" /> {user}
                   <ChevronUp className="ml-auto w-4 h-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -109,7 +113,7 @@ export function AppSidebar() {
               >
                 <DropdownMenuItem>
                   <button
-                    onClick={() => handleNavigation("/login")}
+                    onClick={() => logout()}
                     className="flex w-full items-center justify-center gap-2 text-red-600"
                   >
                     <LogOut className="w-4 h-4" /> Sign out

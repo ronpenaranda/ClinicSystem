@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Poppins({
   subsets: ["latin"],
@@ -20,11 +21,9 @@ export default function RootLayout({
   return (
     <html className={inter.variable} lang="en">
       <body>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/primeicons/primeicons.css"
-        />
+        <link rel="stylesheet" />
         {children}
+        <Toaster />
       </body>
     </html>
   );

@@ -43,11 +43,7 @@ const Loading = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <div className="flex justify-end w-full mb-4">
-            <Button disabled>
-              <Skeleton className="h-5 w-20" />
-            </Button>
-          </div>
+          <div className="flex justify-end w-full mb-4"></div>
         </CardFooter>
       </Card>
     </div>

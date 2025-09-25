@@ -9,7 +9,7 @@ const middleware = async (req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
   const isLoginPage = pathname.startsWith("/login");
-  const isDashboardPage = pathname.startsWith("/dashboard");
+  const isDashboardPage = pathname.startsWith("/");
 
   if (isLoginPage) {
     if (token) {
