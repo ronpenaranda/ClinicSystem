@@ -13,7 +13,7 @@ interface PageProps {
 }
 
 const Page = async ({ params }: PageProps) => {
-  const uids = Number(params.id);
+  const uids = await Number(params.id);
   const doctor_details = await fetch_doctor_by_id(uids);
   const doctor_treatment = await fetch_treatment_by_doctor_id(uids);
   const doctor_schedule = await fetch_doctor_schedules_by_doctor_id(uids);
