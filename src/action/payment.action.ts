@@ -1,6 +1,7 @@
 "use server";
 
 import PaymentsClass, { Payment } from "@/model/payment.model";
+import { requireAuth } from "@/lib/req-auth";
 
 export const fetch_payments_by_treatment = async (
   treatment_id: number
@@ -46,5 +47,9 @@ export const update_payment = async (
 };
 
 export const delete_payment = async (id: number) => {
-  return await PaymentsClass.deletePayment(id);
+  const { authorized } = await requireAuth();
+
+  return authorized
+    ? await PaymentsClass.deletePayment(id)
+    : { success: false, message: "Not authorized" };
 };

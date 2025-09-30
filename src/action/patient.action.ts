@@ -1,5 +1,5 @@
 "use server";
-
+import { requireAuth } from "@/lib/req-auth";
 import PatientClass, { PatientDetails } from "@/model/patient.model";
 
 export const fetch_patient_all = async (): Promise<PatientDetails[]> => {
@@ -44,5 +44,9 @@ export const update_patient = async (
 };
 
 export const delete_patient = async (uid: number) => {
-  return await PatientClass.deletePatient(uid);
+  const { authorized } = await requireAuth();
+
+  return authorized
+    ? await PatientClass.deletePatient(uid)
+    : { success: false, message: "Not authorized" };
 };

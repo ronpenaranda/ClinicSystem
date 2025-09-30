@@ -44,7 +44,7 @@ const Wrapper = ({ data }: WrapperProps) => {
   const handleDelete = async (row: PatientDetails) => {
     setId(row.uid);
     const res = await execute(row.uid);
-    if (res) {
+    if (res?.success) {
       setId(undefined);
       setTableData(tableData.filter((item) => item.uid != row.uid));
     }

@@ -36,15 +36,26 @@ import {
 import useAuth from "@/hooks/useAuth";
 
 const menuItems = [
-  { label: "Dashboard", icon: Home, path: "/dashboard" },
-  { label: "Patient Management", icon: Users, path: "/patient-management" },
+  { label: "Dashboard", icon: Home, path: "/dashboard", disabled: false },
+  {
+    label: "Patient Management",
+    icon: Users,
+    path: "/patient-management",
+    disabled: false,
+  },
   {
     label: "Doctors Management",
     icon: Stethoscope,
     path: "/doctor-management",
+    disabled: false,
   },
-  { label: "Appointment", icon: CalendarDays, path: "/appointment" },
-  { label: "Reports", icon: FileText, path: "/reports" },
+  {
+    label: "Appointment",
+    icon: CalendarDays,
+    path: "/appointment",
+    disabled: false,
+  },
+  { label: "Reports", icon: FileText, path: "/reports", disabled: true },
 ];
 
 export function AppSidebar() {
@@ -72,13 +83,14 @@ export function AppSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map(({ label, icon: Icon, path }) => {
+              {menuItems.map(({ label, icon: Icon, path, disabled }) => {
                 const split_path = pathname.split("/");
                 const isActive = `/${split_path[1]}` === path;
                 return (
                   <SidebarMenuItem key={path}>
                     <SidebarMenuButton asChild>
                       <button
+                        disabled={disabled}
                         onClick={() => handleNavigation(path)}
                         className={`flex gap-4 items-center w-full rounded-md px-3 py-2 transition-colors ${
                           isActive

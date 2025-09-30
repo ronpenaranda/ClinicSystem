@@ -5,6 +5,7 @@ import {
   DoctorScheduleClass,
   DoctorSchedule,
 } from "@/model/doctor-schedule.model";
+import { requireAuth } from "@/lib/req-auth";
 
 export const fetch_doctors_all = async (): Promise<Doctor[]> => {
   try {
@@ -48,7 +49,10 @@ export const update_doctor = async (
 };
 
 export const delete_doctor = async (id: number) => {
-  return await DoctorClass.deleteDoctor(id);
+  const { authorized } = await requireAuth();
+  return authorized
+    ? await DoctorClass.deleteDoctor(id)
+    : { success: false, message: "Not authorized" };
 };
 
 export const fetch_all_doctor_schedules = async (): Promise<
