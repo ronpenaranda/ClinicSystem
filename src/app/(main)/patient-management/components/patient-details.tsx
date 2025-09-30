@@ -45,7 +45,6 @@ const columns_payment = [
 
 const initFormValue: PatientDetails[] = [
   {
-    uid: 0,
     first_name: "",
     middle_name: "",
     last_name: "",
@@ -79,9 +78,10 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
 
   const handleSubmit = async (formData: PatientDetails) => {
     const res = await execute(formData);
-    if (res?.success) {
-      toast(res.message);
-    }
+    if (!res) return toast("Something went wrong");
+
+    toast(res.message);
+    if (res.success) setForm(initFormValue[0]);
   };
 
   return (

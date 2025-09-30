@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import DynamicTable from "@/components/table/table";
 import { PatientDetails } from "@/model/patient.model";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+import { useActionHandler } from "@/hooks/useActionHandler";
+import { delete_patient } from "@/action/patient.action";
 
 import { Plus } from "lucide-react";
 
@@ -15,6 +18,9 @@ interface WrapperProps {
 
 const Wrapper = ({ data }: WrapperProps) => {
   const router = useRouter();
+  const [tableData, setTableData] = useState<PatientDetails[]>(data);
+  const [id, setId] = useState<number | undefined>(undefined);
+  const { execute, isPending } = useActionHandler(delete_patient);
 
   const columns = [
     { header: "uid", keys: "uid" },
@@ -35,6 +41,15 @@ const Wrapper = ({ data }: WrapperProps) => {
     router.push(`/patient-management/add-patient`);
   };
 
+  const handleDelete = async (row: PatientDetails) => {
+    setId(row.uid);
+    const res = await execute(row.uid);
+    if (res) {
+      setId(undefined);
+      setTableData(tableData.filter((item) => item.uid != row.uid));
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-4">
@@ -50,11 +65,14 @@ const Wrapper = ({ data }: WrapperProps) => {
 
       <Card className="p-4">
         <DynamicTable
-          data={data}
+          data={tableData}
           columns={columns}
           caption="List of Patients"
           onEdit={(row) => handleEdit(row)}
-          onDelete={(row) => console.log("Delete:", row)}
+          onDelete={(row) => handleDelete(row)}
+          isLoading={isPending}
+          id={id}
+          idKey="uid"
         />
       </Card>
     </div>

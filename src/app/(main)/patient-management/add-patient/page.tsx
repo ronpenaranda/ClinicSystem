@@ -1,6 +1,5 @@
 import React from "react";
 import PatientForm from "../components/patient-details";
-import type { PatientDetails } from "@/model/patient.model";
 
 const Page = async () => {
   return (
