@@ -12,7 +12,7 @@ const Dashboard = async () => {
       <div className="flex justify-end mb-4 gap-2">
         <Button size="sm" className="flex items-center gap-2">
           <Plus className="w-4 h-4" />
-          Add Appointment
+          Book Appointment
         </Button>
         <Button size="sm" className="flex items-center gap-2">
           <Plus className="w-4 h-4" />

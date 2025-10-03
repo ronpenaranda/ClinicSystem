@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "./form";
+import Form from "./new-form";
 
 const Page = async () => {
   return (

@@ -27,7 +27,7 @@ export function BreadcrumbDemo() {
     pos: "Point Of Sale",
     dashboard: "Dashboard",
     reports: "Reports",
-    "add-appointment": "Add Appointment",
+    "add-appointment": "Book Appointment",
     "add-patient": "Add Patient",
   };
 
