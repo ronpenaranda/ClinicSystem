@@ -19,9 +19,9 @@ const Dashboard = async () => {
           Add Patient
         </Button>
       </div>
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-2">
         <div className="col-span-12 lg:col-span-8">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-2">
             <FlashCard
               icon={User}
               title="Patients Today"
