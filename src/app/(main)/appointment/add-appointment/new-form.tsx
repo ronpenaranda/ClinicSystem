@@ -47,8 +47,9 @@ const Form = () => {
         </CardHeader>
 
         <CardContent>
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-6 space-y-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+            {/* Left column - form */}
+            <div className="md:col-span-6 space-y-4">
               <div>
                 <Label htmlFor="name">Full Name</Label>
                 <Input id="name" placeholder="Enter your name" />
@@ -67,20 +68,21 @@ const Form = () => {
               </div>
             </div>
 
-            <div className="col-span-6 flex gap-6">
-              <div className="w-1/2">
+            {/* Right column - calendar & slots */}
+            <div className="md:col-span-6 flex flex-col gap-6 md:flex-row">
+              <div className="w-full md:w-1/2">
                 <Label>Select Date</Label>
                 <Calendar />
               </div>
-              <div className="w-1/2">
+              <div className="w-full md:w-1/2">
                 <Label>Available Slots</Label>
-                <div className="flex flex-col gap-2 pr-2">
+                <div className="flex flex-wrap gap-2">
                   {SCHEDULE_DAILY.map((item, index) => (
                     <button
                       key={index}
                       type="button"
                       onClick={() => setSelectedTime(item)}
-                      className={`flex items-center justify-center rounded-lg border px-3 py-2 text-sm transition ${
+                      className={`flex-1 rounded-lg border px-3 py-2 text-sm transition ${
                         selectedTime === item
                           ? "bg-blue-600 text-white border-blue-600"
                           : "hover:bg-muted"
@@ -100,6 +102,7 @@ const Form = () => {
             <Button
               onClick={() => handleSubmit(form)}
               disabled={isPending || !selectedTime}
+              className="w-full md:w-auto"
             >
               {isPending ? (
                 <div className="flex gap-2 items-center">
