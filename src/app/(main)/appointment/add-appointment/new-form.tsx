@@ -11,14 +11,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Calendar from "@/components/app-calendar";
-import { insert_appointment } from "@/action/appointment.action";
+import { add_appointment } from "@/action/appointment-add.action";
 import { Loader2 } from "lucide-react";
 import type { Appointment } from "@/model/appointment.model";
 import { useActionHandler } from "@/hooks/useActionHandler";
 import { SCHEDULE_DAILY } from "@/lib/constant";
 
 const Form = () => {
-  const { execute, isPending } = useActionHandler(insert_appointment);
+  const { execute, isPending } = useActionHandler(add_appointment);
   const [form, setForm] = useState<Appointment>({
     patient_uid: 100000011,
     doctor_id: 4000000001,

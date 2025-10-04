@@ -15,8 +15,8 @@ import { delete_appointment } from "@/action/appointment.action";
 import type { Appointment } from "@/model/appointment.model";
 
 const columns = [
-  { header: "Patient Name", keys: "patient_uid" },
-  { header: "Doctor's Name", keys: "doctor_id" },
+  { header: "Patient Name", keys: "patient_name" },
+  { header: "Doctor's Name", keys: "doctor_name" },
   { header: "Appointment", keys: "appointment_date" },
   { header: "Schedule Time", keys: "start_time" },
   { header: "Remarks", keys: "remarks" },

@@ -6,6 +6,7 @@ import { username_from_cookies, login, logout } from "@/lib/auth";
 
 const useAuth = () => {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,12 +31,14 @@ const useAuth = () => {
   };
 
   const handleLogout = async () => {
+    setLoading(true);
     await logout();
     setUser(null);
+    setLoading(false);
     router.push("/login");
   };
 
-  return { user, login: handleLogin, logout: handleLogout };
+  return { user, login: handleLogin, logout: handleLogout, loading };
 };
 
 export default useAuth;

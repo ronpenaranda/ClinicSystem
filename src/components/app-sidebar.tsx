@@ -62,7 +62,7 @@ export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const handleNavigation = (url: string) => {
     router.push(url);
@@ -93,9 +93,7 @@ export function AppSidebar() {
                         disabled={disabled}
                         onClick={() => handleNavigation(path)}
                         className={`flex gap-4 items-center w-full rounded-md px-3 py-2 transition-colors ${
-                          isActive
-                            ? "bg-blue-600 text-white"
-                            : "text-gray-700 hover:bg-gray-100"
+                          isActive ? "bg-black text-white" : "text-gray-700"
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -128,7 +126,14 @@ export function AppSidebar() {
                     onClick={() => logout()}
                     className="flex w-full items-center justify-center gap-2 text-red-600"
                   >
-                    <LogOut className="w-4 h-4" /> Sign out
+                    {loading ? (
+                      <div className="flex gap-2 items-center">
+                        <LogOut className="h-4 w-4 animate-spin" />
+                        Signing out..
+                      </div>
+                    ) : (
+                      "Sign out"
+                    )}
                   </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>

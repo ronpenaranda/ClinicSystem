@@ -12,19 +12,26 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
 import useAuth from "@/hooks/useAuth";
 
 const Page = () => {
   const router = useRouter();
   const [user, setUser] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [checkEmpty, setCheckEmpty] = useState<string>("");
   const { login } = useAuth();
 
   const handleLogin = async () => {
-    if (user) {
-      const response = await login(user, user);
-      if (response) router.push("/dashboard");
+    if (!user) {
+      return setCheckEmpty("Token cannot be empty");
     }
+    setLoading(true);
+    const response = await login(user, user);
+    if (response) router.push("/dashboard");
+    setLoading(false);
+    setCheckEmpty("");
   };
 
   return (
@@ -44,15 +51,30 @@ const Page = () => {
                 <Input
                   onChange={(e) => setUser(e.target.value)}
                   type="password"
+                  className={
+                    checkEmpty
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }
                   placeholder="token ..."
                   required
                 />
+                <p className="text-xs text-red-400">
+                  {checkEmpty ? checkEmpty : ""}
+                </p>
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full" onClick={handleLogin}>
-              Login
+              {loading ? (
+                <div className="flex gap-2 items-center">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Logging in...
+                </div>
+              ) : (
+                "Login"
+              )}
             </Button>
           </CardFooter>
         </Card>
