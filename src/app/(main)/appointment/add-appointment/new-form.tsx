@@ -48,7 +48,6 @@ const Form = () => {
 
         <CardContent>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
-            {/* Left column - form */}
             <div className="md:col-span-6 space-y-4">
               <div>
                 <Label htmlFor="name">Full Name</Label>
@@ -67,8 +66,6 @@ const Form = () => {
                 <Input id="email" placeholder="Enter your email" />
               </div>
             </div>
-
-            {/* Right column - calendar & slots */}
             <div className="md:col-span-6 flex flex-col gap-6 md:flex-row">
               <div className="w-full md:w-1/2">
                 <Label>Select Date</Label>
@@ -76,7 +73,7 @@ const Form = () => {
               </div>
               <div className="w-full md:w-1/2">
                 <Label>Available Slots</Label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-2 pr-2">
                   {SCHEDULE_DAILY.map((item, index) => (
                     <button
                       key={index}
