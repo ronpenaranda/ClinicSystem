@@ -21,17 +21,19 @@ export const fetch_doctors_all = async (): Promise<Doctor[]> => {
   }
 };
 
-export const fetch_doctor_by_id = async (id: number): Promise<Doctor[]> => {
+export const fetch_doctor_by_id = async (
+  id: number
+): Promise<Doctor | null> => {
   try {
     const res = await DoctorClass.getDoctorById(id);
     if ("error" in res) {
       console.error(res.error);
-      return [];
+      return null;
     }
-    return res;
+    return res[0];
   } catch (err) {
     console.error(err);
-    return [];
+    return null;
   }
 };
 

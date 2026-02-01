@@ -16,17 +16,19 @@ export const fetch_patient_all = async (): Promise<PatientDetails[]> => {
   }
 };
 
-export const fetch_patient_by_id = async (uid: number) => {
+export const fetch_patient_by_id = async (
+  uid: number
+): Promise<PatientDetails | null> => {
   try {
     const res = await PatientClass.getPatientByUid(uid);
     if ("error" in res) {
       console.error(res.error);
-      return [];
+      return null;
     }
-    return res;
+    return res[0];
   } catch (err) {
     console.error(err);
-    return [];
+    return null;
   }
 };
 
