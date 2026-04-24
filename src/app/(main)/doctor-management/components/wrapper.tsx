@@ -30,23 +30,27 @@ const Wrapper = ({ data }: WrapperProps) => {
     router.push(`/doctor-management/${url.id}`);
   };
 
+  const handleAdd = () => {
+    router.push("/doctor-management/add-doctor");
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-4">
         <Button
           size="sm"
-          onClick={() => console.log("Add Button")}
+          onClick={handleAdd}
           className="flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Add Doctors
+          Add Doctor
         </Button>
       </div>
       <Card className="p-4">
         <DynamicTable
           data={data}
           columns={columns}
-          caption="List of Patients"
+          caption="List of Doctors"
           onEdit={(row) => handleEdit(row)}
           onDelete={(row) => console.log("Delete:", row)}
         />

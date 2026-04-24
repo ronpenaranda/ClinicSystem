@@ -23,7 +23,7 @@ export default function RootLayout({
       <body>
         <link rel="stylesheet" />
         {children}
-        <Toaster />
+        <Toaster position="top-right" />
       </body>
     </html>
   );

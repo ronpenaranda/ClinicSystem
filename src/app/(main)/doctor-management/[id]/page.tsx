@@ -1,10 +1,7 @@
 import React from "react";
-import { fetch_treatment_by_doctor_id } from "@/action/treatment.action";
-import {
-  fetch_doctor_by_id,
-  fetch_doctor_schedules_by_doctor_id,
-} from "@/action/doctor.action";
-import PatientDetails from "./doctor-details";
+import { notFound } from "next/navigation";
+import { fetch_doctor_by_id } from "@/action/doctor.action";
+import DoctorForm from "../add-doctor/doctor-form";
 
 interface PageProps {
   params: {
@@ -13,19 +10,15 @@ interface PageProps {
 }
 
 const Page = async ({ params }: PageProps) => {
-  const uids = params && Number(params.id);
-  const doctor_details = await fetch_doctor_by_id(uids);
-  const doctor_treatment = await fetch_treatment_by_doctor_id(uids);
-  const doctor_schedule = await fetch_doctor_schedules_by_doctor_id(uids);
+  const doctorId = Number(params.id);
+  const doctor = await fetch_doctor_by_id(doctorId);
+
+  if (!doctor) return notFound();
 
   return (
     <div className="mt-12">
       <div className="bg-white px-6 md:px-16">
-        <PatientDetails
-          data={doctor_details}
-          treatment={doctor_treatment}
-          schedule={doctor_schedule}
-        />
+        <DoctorForm doctor={doctor} mode="edit" />
       </div>
     </div>
   );
