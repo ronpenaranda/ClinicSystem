@@ -4,13 +4,14 @@ import { fetch_doctor_by_id } from "@/action/doctor.action";
 import DoctorForm from "../add-doctor/doctor-form";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 const Page = async ({ params }: PageProps) => {
-  const doctorId = Number(params.id);
+  const { id } = await params;
+  const doctorId = Number(id);
   const doctor = await fetch_doctor_by_id(doctorId);
 
   if (!doctor) return notFound();

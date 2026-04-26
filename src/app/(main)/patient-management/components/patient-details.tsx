@@ -18,12 +18,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-import DynamicTable from "@/components/table/table";
+import DynamicTable, { type TableColumn } from "@/components/table/table";
 import { useActionHandler } from "@/hooks/useActionHandler";
 import { insert_patient } from "@/action/patient.action";
+import TreatmentPaymentForm from "./treatment-payment-form";
 
 interface PatientProps {
-  data?: PatientDetails[];
+  data?: PatientDetails | null;
   treatment?: TreatmentDetails[] | undefined;
   payment?: Payment[] | undefined;
 }
@@ -33,7 +34,7 @@ const columns = [
   { header: "Treatment", keys: "treatment" },
   { header: "Notes", keys: "notes" },
   { header: "Amount", keys: "amount" },
-];
+] satisfies TableColumn<TreatmentDetails>[];
 
 const columns_payment = [
   { header: "Treatment", keys: "treatment" },
@@ -41,7 +42,7 @@ const columns_payment = [
   { header: "Amount", keys: "amount" },
   { header: "Mode of Payment", keys: "payment_method" },
   { header: "Notes", keys: "note" },
-];
+] satisfies TableColumn<Payment>[];
 
 const initFormValue: PatientDetails[] = [
   {
@@ -60,13 +61,21 @@ const initFormValue: PatientDetails[] = [
 
 const PatientForm = ({ data, treatment, payment }: PatientProps) => {
   const { execute, isPending } = useActionHandler(insert_patient);
-  const [form, setForm] = useState<PatientDetails>(
-    data?.[0] ?? initFormValue[0]
-  );
+  const [form, setForm] = useState<PatientDetails>(data ?? initFormValue[0]);
   const [treatments, setTreatment] = useState<TreatmentDetails[] | undefined>(
-    treatment
+    treatment,
   );
   const [payments, setPayments] = useState<Payment[] | undefined>(payment);
+
+  const patientUid = form.uid ?? data?.uid;
+
+  const handleTreatmentCreated = (item: TreatmentDetails) => {
+    setTreatment((current) => [...(current ?? []), item]);
+  };
+
+  const handlePaymentCreated = (item: Payment) => {
+    setPayments((current) => [...(current ?? []), item]);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -89,6 +98,7 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
       <CardHeader>
         <CardTitle>Patient Details</CardTitle>
       </CardHeader>
+
       <CardContent>
         <div className="grid grid-cols-12 gap-6">
           <div className="grid col-span-4 gap-2">
@@ -150,6 +160,22 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
         </div>
       </CardContent>
 
+      {patientUid ? (
+        <div className="px-6 pb-6 sm:px-8">
+          <TreatmentPaymentForm
+            patientUid={patientUid}
+            onTreatmentCreated={handleTreatmentCreated}
+            onPaymentCreated={handlePaymentCreated}
+          />
+        </div>
+      ) : (
+        <div className="px-6 pb-6 sm:px-8">
+          <div className="rounded-2xl border border-dashed bg-muted/20 p-6 text-sm text-muted-foreground">
+            Save this patient first to start adding treatments and payments.
+          </div>
+        </div>
+      )}
+
       <CardContent>
         <Tabs defaultValue="treatment">
           <TabsList>
@@ -157,6 +183,7 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
             <TabsTrigger value="payment">Payments</TabsTrigger>
             <TabsTrigger value="documents">Medical Records</TabsTrigger>
           </TabsList>
+
           <TabsContent value="treatment">
             <Card className="p-4">
               <DynamicTable
@@ -168,6 +195,7 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
               />
             </Card>
           </TabsContent>
+
           <TabsContent value="payment">
             <Card className="p-4">
               <DynamicTable
@@ -177,6 +205,7 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
               />
             </Card>
           </TabsContent>
+
           <TabsContent value="documents">
             <Card className="p-4">
               <p>patient_xray.jpg</p>
@@ -184,11 +213,12 @@ const PatientForm = ({ data, treatment, payment }: PatientProps) => {
           </TabsContent>
         </Tabs>
       </CardContent>
+
       <CardFooter>
-        <div className="flex justify-end w-full mb-4">
+        <div className="flex w-full justify-end mb-4">
           <Button onClick={() => handleSubmit(form)}>
             {isPending ? (
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Saving ...
               </div>

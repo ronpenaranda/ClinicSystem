@@ -1,17 +1,18 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
-export function useActionHandler<R>(action: (...args: any[]) => Promise<R>) {
+export function useActionHandler<Args extends unknown[], R>(
+  action: (...args: Args) => Promise<R>,
+) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<R | null>(null);
 
   const execute = useCallback(
-    async (...args: any[]) => {
+    async (...args: Args) => {
       setIsPending(true);
       setError(null);
 
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         const res = await action(...args);
         setResult(res);
         return res;
@@ -22,7 +23,7 @@ export function useActionHandler<R>(action: (...args: any[]) => Promise<R>) {
         setIsPending(false);
       }
     },
-    [action]
+    [action],
   );
 
   return { execute, isPending, error, result };

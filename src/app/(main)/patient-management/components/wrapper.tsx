@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import DynamicTable from "@/components/table/table";
+import DynamicTable, { type TableColumn } from "@/components/table/table";
 import { PatientDetails } from "@/model/patient.model";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ const Wrapper = ({ data }: WrapperProps) => {
     { header: "Phone Number", keys: "phone_number" },
     { header: "Email Address", keys: "email_address" },
     { header: "Remarks", keys: "remarks" },
-  ];
+  ] satisfies TableColumn<PatientDetails>[];
 
   const handleEdit = (url: PatientDetails) => {
     router.push(`/patient-management/${url.uid}`);
@@ -42,6 +42,10 @@ const Wrapper = ({ data }: WrapperProps) => {
   };
 
   const handleDelete = async (row: PatientDetails) => {
+    if (row.uid === undefined) {
+      return;
+    }
+
     setId(row.uid);
     const res = await execute(row.uid);
     if (res?.success) {

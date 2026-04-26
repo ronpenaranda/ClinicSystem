@@ -24,7 +24,7 @@ class TreatmentClass {
   }
 
   static async getTreatmentByUid(
-    uid: number
+    uid: number,
   ): Promise<TreatmentDetails[] | { error: string }> {
     const { data, error } = await supabase
       .from("treatment_details")
@@ -35,7 +35,7 @@ class TreatmentClass {
   }
 
   static async getTreatmentsByDoctorId(
-    doctor_id: number
+    doctor_id: number,
   ): Promise<TreatmentDetails[] | { error: string }> {
     const { data, error } = await supabase
       .from("treatment_details")
@@ -46,18 +46,21 @@ class TreatmentClass {
   }
 
   static async addTreatment(
-    treatment: Omit<TreatmentDetails, "id">
-  ): Promise<{ success: boolean; message: string }> {
-    const { error } = await supabase
+    treatment: Omit<TreatmentDetails, "id">,
+  ): Promise<TreatmentDetails | { error: string }> {
+    const { data, error } = await supabase
       .from("treatment_details")
-      .insert([treatment]);
-    if (error) return { success: false, message: error.message };
-    return { success: true, message: "Treatment added successfully" };
+      .insert([treatment])
+      .select("*")
+      .single();
+
+    if (error) return { error: error.message };
+    return data as TreatmentDetails;
   }
 
   static async updateTreatment(
     id: number,
-    updates: Partial<Omit<TreatmentDetails, "id">>
+    updates: Partial<Omit<TreatmentDetails, "id">>,
   ): Promise<{ success: boolean; message: string }> {
     const { error } = await supabase
       .from("treatment_details")
@@ -68,7 +71,7 @@ class TreatmentClass {
   }
 
   static async deleteTreatment(
-    id: number
+    id: number,
   ): Promise<{ success: boolean; message: string }> {
     const { error } = await supabase
       .from("treatment_details")

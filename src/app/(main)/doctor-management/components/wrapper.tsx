@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import DynamicTable from "@/components/table/table";
+import DynamicTable, { type TableColumn } from "@/components/table/table";
 import type { Doctor } from "@/model/doctor.model";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ const Wrapper = ({ data }: WrapperProps) => {
     { header: "Email Address", keys: "email" },
     { header: "License Number", keys: "license_number" },
     { header: "Date Hired", keys: "hire_date" },
-  ];
+  ] satisfies TableColumn<Doctor>[];
 
   const handleEdit = (url: Doctor) => {
     router.push(`/doctor-management/${url.id}`);

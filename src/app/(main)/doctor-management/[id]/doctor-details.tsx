@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import DynamicTable from "@/components/table/table";
+import DynamicTable, { type TableColumn } from "@/components/table/table";
 
 interface PatientProps {
   data: Doctor[];
@@ -29,7 +29,7 @@ const columns = [
   { header: "Treatment", keys: "treatment" },
   { header: "Notes", keys: "notes" },
   { header: "Amount", keys: "amount" },
-];
+] satisfies TableColumn<TreatmentDetails>[];
 
 const columns_schedule = [
   { header: "Doctor", keys: "doctor_id" },
@@ -38,7 +38,7 @@ const columns_schedule = [
   { header: "End Time", keys: "end_time" },
   { header: "Available", keys: "is_available" },
   { header: "Notes", keys: "notes" },
-];
+] satisfies TableColumn<DoctorSchedule>[];
 
 const PatientDetails = ({ data, treatment, schedule }: PatientProps) => {
   const [form, setForm] = useState<Doctor>(data[0]);

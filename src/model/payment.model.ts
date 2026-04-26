@@ -15,15 +15,20 @@ export interface Payment {
 
 class PaymentsClass {
   static async addPayment(
-    payment: Omit<Payment, "id">
-  ): Promise<{ success: boolean; message: string }> {
-    const { error } = await supabase.from("payments").insert([{ ...payment }]);
-    if (error) return { success: false, message: error.message };
-    return { success: true, message: "Payment added successfully" };
+    payment: Omit<Payment, "id">,
+  ): Promise<Payment | { error: string }> {
+    const { data, error } = await supabase
+      .from("payments")
+      .insert([{ ...payment }])
+      .select("*")
+      .single();
+
+    if (error) return { error: error.message };
+    return data as Payment;
   }
 
   static async getPaymentsByTreatment(
-    treatment_id: number
+    treatment_id: number,
   ): Promise<Payment[] | { error: string }> {
     const { data, error } = await supabase
       .from("payments")
@@ -35,7 +40,7 @@ class PaymentsClass {
   }
 
   static async getPaymentsByPatient(
-    uid: number
+    uid: number,
   ): Promise<Payment[] | { error: string }> {
     const { data, error } = await supabase
       .from("payments")
@@ -47,7 +52,7 @@ class PaymentsClass {
   }
 
   static async deletePayment(
-    id: number
+    id: number,
   ): Promise<{ success: boolean; message: string }> {
     const { error } = await supabase.from("payments").delete().eq("id", id);
     if (error) return { success: false, message: error.message };
@@ -56,7 +61,7 @@ class PaymentsClass {
 
   static async updatePayment(
     id: number,
-    payment: Partial<Omit<Payment, "id">>
+    payment: Partial<Omit<Payment, "id">>,
   ): Promise<{ success: boolean; message: string }> {
     const { error } = await supabase
       .from("payments")

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -53,6 +54,7 @@ const formatSlotLabel = (time: string) => {
 };
 
 const Form = () => {
+  const router = useRouter();
   const { execute, isPending } = useActionHandler(add_appointment);
 
   const [form, setForm] = useState<BookingFormState>({
@@ -131,13 +133,26 @@ const Form = () => {
               </CardTitle>
               <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
                 Fill in the patient and doctor IDs, pick a date and time slot,
-                then send the booking to the appointment system.
+                then send the booking to the appointment system. Open patient
+                management first if you need to add treatment or payment
+                details.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm text-muted-foreground shadow-sm">
-              <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              30-minute booking slots
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                30-minute booking slots
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push("/patient-management")}
+                className="w-full"
+              >
+                Manage patient details
+              </Button>
             </div>
           </div>
         </CardHeader>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -48,13 +48,19 @@ const DoctorForm = ({ doctor, mode = "create" }: DoctorFormProps) => {
   const router = useRouter();
   const isEditMode = mode === "edit";
   const doctorId = doctor?.id ?? null;
-  const { execute, isPending } = useActionHandler(
-    isEditMode ? update_doctor : insert_doctor,
-  );
+  const createDoctorAction = useActionHandler(insert_doctor);
+  const updateDoctorAction = useActionHandler(update_doctor);
+  const isPending = isEditMode
+    ? updateDoctorAction.isPending
+    : createDoctorAction.isPending;
   const [form, setForm] = useState<DoctorFormState>(() =>
     createInitialForm(doctor),
   );
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setForm(createInitialForm(doctor));
+  }, [doctor]);
 
   const updateForm = (field: keyof DoctorFormState, value: string) => {
     setForm((current) => ({
@@ -99,8 +105,8 @@ const DoctorForm = ({ doctor, mode = "create" }: DoctorFormProps) => {
 
     const response =
       isEditMode && doctorId !== null
-        ? await execute(doctorId, payload)
-        : await execute(payload);
+        ? await updateDoctorAction.execute(doctorId, payload)
+        : await createDoctorAction.execute(payload);
 
     if (!response) {
       const message = "Unable to save doctor information.";
