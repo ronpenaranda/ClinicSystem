@@ -1,13 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import DynamicTable, { type TableColumn } from "@/components/table/table";
 import type { Doctor } from "@/model/doctor.model";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-import { Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { delete_doctor } from "@/action/doctor.action";
+import { useActionHandler } from "@/hooks/useActionHandler";
+import { toast } from "sonner";
+import { Plus, Loader2 } from "lucide-react";
 
 interface WrapperProps {
   data: Doctor[];
@@ -15,6 +25,8 @@ interface WrapperProps {
 
 const Wrapper = ({ data }: WrapperProps) => {
   const router = useRouter();
+  const { execute, isPending } = useActionHandler(delete_doctor);
+  const [deleteTarget, setDeleteTarget] = useState<Doctor | null>(null);
 
   const columns = [
     { header: "uid", keys: "id" },
@@ -32,6 +44,18 @@ const Wrapper = ({ data }: WrapperProps) => {
 
   const handleAdd = () => {
     router.push("/doctor-management/add-doctor");
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    const res = await execute(deleteTarget.id);
+    if (res?.success) {
+      toast.success(res.message);
+      setDeleteTarget(null);
+      router.refresh();
+    } else {
+      toast.error(res?.message ?? "Failed to delete doctor");
+    }
   };
 
   return (
@@ -52,9 +76,45 @@ const Wrapper = ({ data }: WrapperProps) => {
           columns={columns}
           caption="List of Doctors"
           onEdit={(row) => handleEdit(row)}
-          onDelete={(row) => console.log("Delete:", row)}
+          onDelete={(row) => setDeleteTarget(row)}
         />
       </Card>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Doctor</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-semibold">{deleteTarget?.name}</span>? This
+              will also remove all associated appointments, treatments, and
+              payments. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete} disabled={isPending}>
+              {isPending ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Deleting...
+                </span>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
