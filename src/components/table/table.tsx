@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Loader2, PenLine, Trash2 } from "lucide-react";
+import { Inbox, Loader2, PenLine, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -169,7 +169,7 @@ function DynamicTable<T extends object>({
                 >
                   <div className="mx-auto flex max-w-sm flex-col items-center gap-3 text-sm text-muted-foreground">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/70 text-muted-foreground">
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Inbox className="h-5 w-5" />
                     </div>
                     <div className="space-y-1">
                       <p className="font-medium text-foreground">
