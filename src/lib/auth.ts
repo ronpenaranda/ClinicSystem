@@ -2,8 +2,16 @@
 
 import { cookies } from "next/headers";
 import * as jose from "jose";
+import UserClass from "@/model/user.model";
 
 const secret = new TextEncoder().encode("supersecretkey");
+
+const SUPER_ADMIN = {
+  username: "superadmin",
+  password: "superadmin123",
+  name: "Super Admin",
+  role: "superadmin",
+};
 
 export const verify_token = async (token: string) => {
   try {
@@ -15,11 +23,48 @@ export const verify_token = async (token: string) => {
   }
 };
 
-export const login = async (username: string, password: string) => {
+export const login = async (
+  username: string,
+  password: string
+): Promise<{ success: boolean; message: string }> => {
   const cookieStore = await cookies();
 
   try {
-    const token = await new jose.SignJWT({ uid: username, name: password })
+    if (username === SUPER_ADMIN.username && password === SUPER_ADMIN.password) {
+      const token = await new jose.SignJWT({
+        uid: SUPER_ADMIN.username,
+        role: SUPER_ADMIN.role,
+        name: SUPER_ADMIN.name,
+      })
+        .setProtectedHeader({ alg: "HS256" })
+        .setIssuedAt()
+        .setExpirationTime("1h")
+        .sign(secret);
+
+      cookieStore.set("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        path: "/",
+      });
+      return { success: true, message: "Login successful" };
+    }
+
+    const user = await UserClass.getUserByUsername(username);
+
+    if (!user || "error" in user) {
+      return { success: false, message: "Invalid username or password" };
+    }
+
+    if (user.password !== password) {
+      return { success: false, message: "Invalid username or password" };
+    }
+
+    const token = await new jose.SignJWT({
+      uid: user.username,
+      role: user.role,
+      name: user.name,
+    })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("1h")
@@ -31,10 +76,10 @@ export const login = async (username: string, password: string) => {
       sameSite: "lax",
       path: "/",
     });
-    return token;
+    return { success: true, message: "Login successful" };
   } catch (err) {
     console.error("ERROR: ", err);
-    return null;
+    return { success: false, message: "An error occurred during login" };
   }
 };
 
