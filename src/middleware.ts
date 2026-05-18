@@ -9,9 +9,10 @@ const middleware = async (req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
   const isLoginPage = pathname.startsWith("/login");
+  const isSignupPage = pathname.startsWith("/signup");
   const isDashboardPage = pathname.startsWith("/");
 
-  if (isLoginPage) {
+  if (isLoginPage || isSignupPage) {
     if (token) {
       try {
         await jose.jwtVerify(token, secret);

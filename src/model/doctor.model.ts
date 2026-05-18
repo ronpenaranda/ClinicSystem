@@ -3,7 +3,7 @@
 import supabase from "@/db/supabase";
 
 export interface Doctor {
-  id?: number;
+  id: number;
   name: string;
   specialization: string;
   contact_number?: string;

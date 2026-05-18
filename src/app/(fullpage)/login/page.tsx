@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,20 +19,25 @@ import useAuth from "@/hooks/useAuth";
 
 const Page = () => {
   const router = useRouter();
-  const [user, setUser] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [checkEmpty, setCheckEmpty] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const { login } = useAuth();
 
   const handleLogin = async () => {
-    if (!user) {
-      return setCheckEmpty("Token cannot be empty");
+    if (!username || !password) {
+      return setError("Username and password are required");
     }
     setLoading(true);
-    const response = await login(user, user);
-    if (response) router.push("/dashboard");
+    setError("");
+    const response = await login(username, password);
+    if (response?.success) {
+      router.push("/dashboard");
+    } else {
+      setError(response?.message ?? "Login failed");
+    }
     setLoading(false);
-    setCheckEmpty("");
   };
 
   return (
@@ -41,28 +47,37 @@ const Page = () => {
           <CardHeader>
             <CardTitle>Login to your account</CardTitle>
             <CardDescription className="text-xs">
-              Enter token below to login to your account
+              Enter your credentials below to login
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Token</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  onChange={(e) => setUser(e.target.value)}
-                  type="password"
+                  id="username"
+                  onChange={(e) => setUsername(e.target.value)}
                   className={
-                    checkEmpty
-                      ? "border-red-500 focus-visible:ring-red-500"
-                      : ""
+                    error ? "border-red-500 focus-visible:ring-red-500" : ""
                   }
-                  placeholder="token ..."
+                  placeholder="Enter username"
                   required
                 />
-                <p className="text-xs text-red-400">
-                  {checkEmpty ? checkEmpty : ""}
-                </p>
               </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  className={
+                    error ? "border-red-500 focus-visible:ring-red-500" : ""
+                  }
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+              {error && <p className="text-xs text-red-400">{error}</p>}
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
@@ -76,6 +91,12 @@ const Page = () => {
                 "Login"
               )}
             </Button>
+            <p className="text-xs text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-primary underline">
+                Sign up
+              </Link>
+            </p>
           </CardFooter>
         </Card>
       </div>

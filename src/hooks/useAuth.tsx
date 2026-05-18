@@ -21,9 +21,10 @@ const useAuth = () => {
   const handleLogin = async (username: string, password: string) => {
     try {
       const response = await login(username, password);
-      const convert: any = JSON.stringify(response, null, 2);
-      setUser(convert);
-      return convert;
+      if (response?.success) {
+        setUser(username);
+      }
+      return response;
     } catch (err) {
       console.error(err);
       return null;
