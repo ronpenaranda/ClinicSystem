@@ -20,12 +20,12 @@ CREATE TABLE users (
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   contact_number TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'user'
+  role TEXT NOT NULL DEFAULT 'user',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_by TEXT NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_by TEXT NOT NULL,
-  is_active BOOLEAN NOT NULL DEFAULT TRUE
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
   is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
