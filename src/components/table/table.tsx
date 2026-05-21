@@ -28,6 +28,8 @@ export interface TableProps<T extends object> {
   caption?: string;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  canEdit?: (row: T) => boolean;
+  canDelete?: (row: T) => boolean;
   isLoading?: boolean;
   id?: number;
   idKey?: Extract<keyof T, string>;
@@ -66,6 +68,8 @@ function DynamicTable<T extends object>({
   caption,
   onEdit,
   onDelete,
+  canEdit,
+  canDelete,
   isLoading = false,
   id,
   idKey,
@@ -212,7 +216,7 @@ function DynamicTable<T extends object>({
                     {hasActions ? (
                       <TableCell className="px-5 py-4 text-right">
                         <div className="inline-flex items-center gap-2">
-                          {onEdit ? (
+                          {onEdit && (canEdit ? canEdit(row) : true) ? (
                             <Button
                               type="button"
                               size="icon"
@@ -225,7 +229,7 @@ function DynamicTable<T extends object>({
                             </Button>
                           ) : null}
 
-                          {onDelete ? (
+                          {onDelete && (canDelete ? canDelete(row) : true) ? (
                             <Button
                               type="button"
                               size="icon"
