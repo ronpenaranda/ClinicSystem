@@ -25,12 +25,15 @@ export const verify_token = async (token: string) => {
 
 export const login = async (
   username: string,
-  password: string
+  password: string,
 ): Promise<{ success: boolean; message: string }> => {
   const cookieStore = await cookies();
 
   try {
-    if (username === SUPER_ADMIN.username && password === SUPER_ADMIN.password) {
+    if (
+      username === SUPER_ADMIN.username &&
+      password === SUPER_ADMIN.password
+    ) {
       const token = await new jose.SignJWT({
         uid: SUPER_ADMIN.username,
         role: SUPER_ADMIN.role,
@@ -100,6 +103,24 @@ export const username_from_cookies = async () => {
     if (!token) return null;
     const res = await verify_token(token);
     return res?.uid ?? "";
+  } catch (err) {
+    console.error("ERROR: ", err);
+    return null;
+  }
+};
+
+export const get_user_from_cookies = async () => {
+  const cookieStore = await cookies();
+  try {
+    const token = cookieStore.get("token")?.value;
+    if (!token) return null;
+    const res = await verify_token(token);
+    if (!res) return null;
+    return {
+      uid: res.uid as string,
+      role: res.role as string,
+      name: res.name as string,
+    };
   } catch (err) {
     console.error("ERROR: ", err);
     return null;

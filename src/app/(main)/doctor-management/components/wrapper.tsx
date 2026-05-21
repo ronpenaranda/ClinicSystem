@@ -21,12 +21,27 @@ import { Plus, Loader2 } from "lucide-react";
 
 interface WrapperProps {
   data: Doctor[];
+  currentUser: { uid: string; role: string; name: string } | null;
 }
 
-const Wrapper = ({ data }: WrapperProps) => {
+const Wrapper = ({ data, currentUser }: WrapperProps) => {
   const router = useRouter();
   const { execute, isPending } = useActionHandler(delete_doctor);
   const [deleteTarget, setDeleteTarget] = useState<Doctor | null>(null);
+
+  const isAdmin = currentUser?.role === "admin" || currentUser?.role === "superadmin";
+
+  const canDelete = (doctor: Doctor) => {
+    if (!isAdmin) return false;
+    if (currentUser?.role !== "superadmin" && doctor.name === currentUser?.name) return false;
+    return true;
+  };
+
+  const canEdit = (doctor: Doctor) => {
+    if (isAdmin) return true;
+    if (currentUser?.role === "doctor" && doctor.name === currentUser?.name) return true;
+    return false;
+  };
 
   const columns = [
     { header: "uid", keys: "id" },
@@ -61,22 +76,26 @@ const Wrapper = ({ data }: WrapperProps) => {
   return (
     <div>
       <div className="flex justify-end mb-4">
-        <Button
-          size="sm"
-          onClick={handleAdd}
-          className="flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Add Doctor
-        </Button>
+        {isAdmin && (
+          <Button
+            size="sm"
+            onClick={handleAdd}
+            className="flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Add Doctor
+          </Button>
+        )}
       </div>
       <Card className="p-4">
         <DynamicTable
           data={data}
           columns={columns}
           caption="List of Doctors"
-          onEdit={(row) => handleEdit(row)}
-          onDelete={(row) => setDeleteTarget(row)}
+          onEdit={isAdmin || currentUser?.role === "doctor" ? (row) => handleEdit(row) : undefined}
+          canEdit={isAdmin ? () => true : (row) => row.name === currentUser?.name}
+          onDelete={isAdmin ? (row) => setDeleteTarget(row) : undefined}
+          canDelete={(row) => canDelete(row)}
         />
       </Card>
 
