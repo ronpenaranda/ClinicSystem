@@ -5,7 +5,7 @@ import {
   DoctorScheduleClass,
   DoctorSchedule,
 } from "@/model/doctor-schedule.model";
-import { requireAuth } from "@/lib/req-auth";
+import { get_user_from_cookies } from "@/lib/auth";
 
 export const fetch_doctors_all = async (): Promise<Doctor[]> => {
   try {
@@ -22,7 +22,7 @@ export const fetch_doctors_all = async (): Promise<Doctor[]> => {
 };
 
 export const fetch_doctor_by_id = async (
-  id: number
+  id: number,
 ): Promise<Doctor | null> => {
   try {
     const res = await DoctorClass.getDoctorById(id);
@@ -38,23 +38,63 @@ export const fetch_doctor_by_id = async (
 };
 
 export const insert_doctor = async (
-  doctor: Omit<Doctor, "id" | "hire_date">
+  doctor: Omit<Doctor, "id" | "hire_date">,
 ) => {
+  const user = await get_user_from_cookies();
+  if (!user) return { success: false, message: "Not authenticated" };
+
+  const allowedRoles = ["admin", "superadmin"];
+  if (!allowedRoles.includes(user.role)) {
+    return { success: false, message: "Only admins can add doctors" };
+  }
+
   return await DoctorClass.addDoctor(doctor);
 };
 
 export const update_doctor = async (
   id: number,
-  updates: Partial<Omit<Doctor, "id" | "hire_date">>
+  updates: Partial<Omit<Doctor, "id" | "hire_date">>,
 ) => {
+  const user = await get_user_from_cookies();
+  if (!user) return { success: false, message: "Not authenticated" };
+
+  const allowedRoles = ["admin", "superadmin", "doctor"];
+  if (!allowedRoles.includes(user.role)) {
+    return { success: false, message: "Not authorized to edit doctors" };
+  }
+
+  if (user.role === "doctor") {
+    const doctor = await DoctorClass.getDoctorById(id);
+    if ("error" in doctor)
+      return { success: false, message: "Doctor not found" };
+    if (doctor[0]?.name !== user.name) {
+      return { success: false, message: "You can only edit your own record" };
+    }
+  }
+
   return await DoctorClass.updateDoctor(id, updates);
 };
 
 export const delete_doctor = async (id: number) => {
-  const { authorized } = await requireAuth();
-  return authorized
-    ? await DoctorClass.deleteDoctor(id)
-    : { success: false, message: "Not authorized" };
+  const user = await get_user_from_cookies();
+  if (!user) return { success: false, message: "Not authenticated" };
+
+  const allowedRoles = ["admin", "superadmin"];
+  if (!allowedRoles.includes(user.role)) {
+    return { success: false, message: "Only admins can delete doctors" };
+  }
+
+  const doctor = await DoctorClass.getDoctorById(id);
+  if ("error" in doctor) return { success: false, message: "Doctor not found" };
+
+  if (user.role !== "superadmin" && doctor[0]?.name === user.name) {
+    return {
+      success: false,
+      message: "You cannot delete your own doctor record",
+    };
+  }
+
+  return await DoctorClass.deleteDoctor(id);
 };
 
 export const fetch_all_doctor_schedules = async (): Promise<
@@ -74,7 +114,7 @@ export const fetch_all_doctor_schedules = async (): Promise<
 };
 
 export const fetch_doctor_schedules_by_doctor_id = async (
-  doctorId: number
+  doctorId: number,
 ): Promise<DoctorSchedule[]> => {
   try {
     const res = await DoctorScheduleClass.getSchedulesByDoctorId(doctorId);
@@ -95,7 +135,7 @@ export const insert_doctor_schedule = async (schedule: DoctorSchedule) => {
 
 export const update_doctor_schedule = async (
   id: number,
-  updates: Partial<DoctorSchedule>
+  updates: Partial<DoctorSchedule>,
 ) => {
   return await DoctorScheduleClass.updateSchedule(id, updates);
 };
