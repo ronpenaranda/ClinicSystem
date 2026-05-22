@@ -47,19 +47,19 @@ export function useLiveAppointments() {
                 return [...current, newAppointment].sort(
                   (a, b) =>
                     new Date(a.appointment_date).getTime() -
-                    new Date(b.appointment_date).getTime()
+                    new Date(b.appointment_date).getTime(),
                 );
 
               case "UPDATE":
                 if (!newAppointment) return current;
                 return current
                   .map((appt) =>
-                    appt.id === newAppointment.id ? newAppointment : appt
+                    appt.id === newAppointment.id ? newAppointment : appt,
                   )
                   .sort(
                     (a, b) =>
                       new Date(a.appointment_date).getTime() -
-                      new Date(b.appointment_date).getTime()
+                      new Date(b.appointment_date).getTime(),
                   );
 
               case "DELETE":
@@ -70,7 +70,7 @@ export function useLiveAppointments() {
                 return current;
             }
           });
-        }
+        },
       )
       .subscribe();
 
