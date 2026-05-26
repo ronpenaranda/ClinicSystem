@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: nextjs-ingress
+  namespace: production
+
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - host: yourdomain.com
+
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: nextjs-service
+                port:
+                  number: 80
