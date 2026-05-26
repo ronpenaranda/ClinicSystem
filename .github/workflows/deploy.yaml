@@ -24,13 +24,13 @@ jobs:
           docker build \
             --build-arg NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} \
             --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }} \
-            -t yourdockerhub/nextjs-app:${{ github.sha }} \
-            -t yourdockerhub/nextjs-app:latest .
+            -t yatogamidev/nextjs-app:${{ github.sha }} \
+            -t yatogamidev/nextjs-app:latest .
 
       - name: Push Image
         run: |
-          docker push yourdockerhub/nextjs-app:${{ github.sha }}
-          docker push yourdockerhub/nextjs-app:latest
+          docker push yatogamidev/nextjs-app:${{ github.sha }}
+          docker push yatogamidev/nextjs-app:latest
 
       - name: Setup Kubectl
         uses: azure/setup-kubectl@v4
