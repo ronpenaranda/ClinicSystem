@@ -39,6 +39,13 @@ jobs:
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      # TEMPORARY - remove this step once connection is confirmed working
+      - name: Debug Connection
+        run: |
+          kubectl config view
+          kubectl cluster-info
 
       - name: Deploy
         run: |
