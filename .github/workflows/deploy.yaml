@@ -1,4 +1,4 @@
-name: Deploy NextJS to K3s
+name: Deploy to K3s
 
 on:
   push:
@@ -6,52 +6,59 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Docker Login
+      # 2. Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Image
-        run: |
-          docker build \
-            --build-arg NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} \
-            --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }} \
-            -t yatogamidev/nextjs-app:${{ github.sha }} \
-            -t yatogamidev/nextjs-app:latest .
+      # 4. Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/nextjs-app:${{ github.sha }}
 
-      - name: Push Image
-        run: |
-          docker push yatogamidev/nextjs-app:${{ github.sha }}
-          docker push yatogamidev/nextjs-app:latest
+      # 5. SSH into EC2 and deploy with Helm
+      - name: Deploy to K3s via Helm
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Set kubeconfig
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
-      - name: Setup Kubectl
-        uses: azure/setup-kubectl@v4
+            # Pull latest image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest
 
-      - name: Configure Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
+            # Deploy or upgrade with Helm
+            helm upgrade --install nextjs-app ~/helm/nextjs-app \
+              --set image.repository=${{ secrets.DOCKER_USERNAME }}/nextjs-app \
+              --set image.tag=${{ github.sha }} \
+              --set image.pullPolicy=Always \
+              --wait \
+              --timeout 5m
 
-      # TEMPORARY - remove this step once connection is confirmed working
-      - name: Debug Connection
-        run: |
-          kubectl config view
-          kubectl cluster-info
+            # Verify deployment
+            kubectl rollout status deployment/nextjs-app
 
-      - name: Deploy
-        run: |
-          kubectl apply -f k8s/base/namespace.yaml
-          kubectl apply -f k8s/base/deployment.yaml
-          kubectl apply -f k8s/base/service.yaml
-          kubectl apply -f k8s/base/ingress.yaml
-
-          kubectl rollout restart deployment nextjs-app -n production
+            # Show running pods
+            kubectl get pods
