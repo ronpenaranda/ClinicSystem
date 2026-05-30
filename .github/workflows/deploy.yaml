@@ -25,15 +25,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Image
-        run: |
-          docker build \
-            --build-arg NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} \
-            --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }} \
-            -t yatogamidev/nextjs-app:${{ github.sha }} \
-            -t yatogamidev/nextjs-app:latest .
-
-      # 4. Build and push Docker image
+      # 4. Build and push Docker image (with build-args)
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -42,6 +34,9 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest
             ${{ secrets.DOCKER_USERNAME }}/nextjs-app:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       # 5. SSH into EC2 and deploy with Helm
       - name: Deploy to K3s via Helm
